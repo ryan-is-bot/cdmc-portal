@@ -134,22 +134,46 @@ elif choice == "Daily Verse":
 
 elif choice == "Prayer Requests":
     st.header("🙏 Prayer Wall")
-    name = st.text_input("Name")
-    request = st.text_area("How can we pray for you?")
-    if st.button("Submit Request"):
-        # This part saves the current request
-        st.write(f"Thank you {name}, your request has been added to our list.")
-        st.balloons() # Optional: A nice touch to show it was sent!
+    
+    # 1. Initialize the Google Sheets Connection
+    from streamlit_gsheets import GSheetsConnection
+    conn = st.connection("gsheets", type=GSheetsConnection)
+
+    # 2. The Submission Form
+    # Using a 'form' makes it work better on mobile browsers like Brave
+    with st.form(key="prayer_form"):
+        name = st.text_input("Name")
+        request = st.text_area("How can we pray for you?")
+        submit_button = st.form_submit_button(label="Submit Request")
+
+        if submit_button:
+            if request:
+                # Prepare the data for the Google Sheet
+                import datetime
+                new_data = {
+                    "Date": [datetime.datetime.now().strftime("%Y-%m-%d %H:%M")],
+                    "Name": [name if name else "Anonymous"],
+                    "Request": [request]
+                }
+                
+                try:
+                    # Save the data to your Google Sheet
+                    conn.create(data=new_data)
+                    st.success(f"Thank you {name}, your request has been added to our list.")
+                    st.balloons() 
+                except Exception as e:
+                    st.error("Connection error. Check your 'Secrets' or Internet.")
+            else:
+                st.warning("Please enter a prayer request before submitting.")
 
     st.divider()
     
-    # This is the "Cool" part: The Prayer Support Button
+    # 3. Your Prayer Support Button (Fellowship)
     st.subheader("🤝 Pray with Others")
     st.write("Click below to let the community know you are praying for the current requests.")
     
     if st.button("🙏 I am praying for this"):
         st.success("Amen! Your fellowship in prayer has been noted.")
-        # This creates a "Toast" message that slides in on mobile
         st.toast("You've joined the prayer circle!", icon="✨")
 
 elif choice == "Gallery":
