@@ -43,8 +43,16 @@ logo_path = os.path.join(os.path.dirname(__file__), "cdmc_logo.png")
 
 st.set_page_config(
     page_title="CDMC Portal", 
-    page_icon="cdmc_logo.png",
+    page_icon=logo_path,
     initial_sidebar_state="auto"
+    )
+# App icon on Mobile Force Fix
+st.markdown (
+    f"""
+    <link rel="apple-touch-icon" href="cdmc_logo.png">
+    <link rel="shortcut icon" href="cdmc_logo.png">
+    """,
+    unsafe_allow_html=True
     )
 st.image(logo_path, width=150)
 
