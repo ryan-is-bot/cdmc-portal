@@ -3,6 +3,7 @@ from datetime import datetime
 import requests #Live auto-check
 import os
 import streamlit.components.v1 as components
+import pytz # Philippines Time Zone
 # Force Python to find your 'Image' folder relative to this script
 base_path = os.path.dirname(__file__)
 
@@ -29,8 +30,11 @@ def load_text(filename):
 
 # App like look in the browser
 
-# Countdown
-hour = datetime.now().hour
+# Countdown - Set to Manila Time
+manila_tz = pytz.timezone('Asia/Manila')
+now_in_manila = datetime.now(manila_tz)
+hour = now_in_manila.hour
+
 if hour < 12:
     st.write("☀️ **Good Morning, CDMC Family!**")
 elif hour < 18:
@@ -140,7 +144,6 @@ elif choice == "Prayer Requests":
     conn = st.connection("gsheets", type=GSheetsConnection)
 
     # 2. The Submission Form
-    # Using a 'form' makes it work better on mobile browsers like Brave
     with st.form(key="prayer_form"):
         name = st.text_input("Name")
         request = st.text_area("How can we pray for you?")
