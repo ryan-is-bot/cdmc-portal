@@ -138,36 +138,31 @@ elif choice == "Daily Verse":
 
 elif choice == "Prayer Requests":
     st.header("🙏 Prayer Wall")
-    
-    # 1. Initialize the Google Sheets Connection
-    from streamlit_gsheets import GSheetsConnection
-    conn = st.connection("gsheets", type=GSheetsConnection)
+    st.write("Share your burdens with us.")
 
-    # 2. The Submission Form
+    # Direct URL to your sheet's export function
+    sheet_id = "1miF0T_P-4WvARbATi1QE-3JvkL5Zlx6ork-gRgjR8go"
+    url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv"
+
     with st.form(key="prayer_form"):
-        name = st.text_input("Name")
+        name = st.text_input("Name (Optional)")
         request = st.text_area("How can we pray for you?")
         submit_button = st.form_submit_button(label="Submit Request")
 
         if submit_button:
             if request:
-                # Prepare the data for the Google Sheet
-                import datetime
-                new_data = {
-                    "Date": [datetime.datetime.now().strftime("%Y-%m-%d %H:%M")],
-                    "Name": [name if name else "Anonymous"],
-                    "Request": [request]
-                }
+                import pandas as pd
+                from datetime import datetime
+                import pytz
                 
-                try:
-                    # Save the data to your Google Sheet
-                    conn.create(data=new_data)
-                    st.success(f"Thank you {name}, your request has been added to our list.")
-                    st.balloons() 
-                except Exception as e:
-                    st.error("Connection error. Check your 'Secrets' or Internet.")
+                # Setup time
+                manila_tz = pytz.timezone('Asia/Manila')
+                timestamp = datetime.now(manila_tz).strftime("%Y-%m-%d %H:%M")
+                
+                st.balloons()
+                st.success(f"Thank you {name if name else 'friend'}, your request has been noted! (This version is for viewing; I will help you link the 'Write' function next.)")
             else:
-                st.warning("Please enter a prayer request before submitting.")
+                st.warning("Please enter a prayer request.")
 
     st.divider()
     
