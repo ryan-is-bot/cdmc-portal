@@ -41,8 +41,10 @@ else:
 # Path for logo
 logo_path = os.path.join(os.path.dirname(__file__), "cdmc_logo.png")
 
-st.set_page_config(page_title="CDMC Portal", page_icon=logo_path,
-    initial_sidebar_state="auto" # Auto Hides the sidebar
+st.set_page_config(
+    page_title="CDMC Portal", 
+    page_icon="cdmc_logo.png",
+    initial_sidebar_state="auto"
     )
 st.image(logo_path, width=150)
 
