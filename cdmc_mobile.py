@@ -138,11 +138,7 @@ elif choice == "Daily Verse":
 
 elif choice == "Prayer Requests":
     st.header("🙏 Prayer Wall")
-    st.write("Share your burdens with us.")
-
-    # Direct URL to your sheet's export function
-    sheet_id = "1miF0T_P-4WvARbATi1QE-3JvkL5Zlx6ork-gRgjR8go"
-    url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv"
+    st.write("Share your burdens with us. Your requests go directly to our leadership team.")
 
     with st.form(key="prayer_form"):
         name = st.text_input("Name (Optional)")
@@ -151,28 +147,22 @@ elif choice == "Prayer Requests":
 
         if submit_button:
             if request:
-                import pandas as pd
-                from datetime import datetime
-                import pytz
-                
-                # Setup time
-                manila_tz = pytz.timezone('Asia/Manila')
-                timestamp = datetime.now(manila_tz).strftime("%Y-%m-%d %H:%M")
-                
                 st.balloons()
-                st.success(f"Thank you {name if name else 'friend'}, your request has been noted!")
-            else:
-                st.warning("Please enter a prayer request.")
+                st.success(f"Amen! Thank you {name if name else 'friend'}.")
+                
+                # This part "encodes" the text so it can travel in a URL
+                import urllib.parse
+                encoded_request = urllib.parse.quote(request)
+                encoded_name = urllib.parse.quote(name) if name else ""
 
-    st.divider()
-    
-    # 3. Your Prayer Support Button (Fellowship)
-    st.subheader("🤝 Pray with Others")
-    st.write("Click below to let the community know you are praying for the current requests.")
-    
-    if st.button("🙏 I am praying for this"):
-        st.success("Amen! Your fellowship in prayer has been noted.")
-        st.toast("You've joined the prayer circle!", icon="✨")
+                # This is the special link that fills the boxes for them!
+                # Note: 'entry.12345' numbers come from the specific form
+                final_url = f"https://docs.google.com/forms/d/e/1FAIpQLSf1J03TnGOoP5vTRGTcYwd4rpdKl5ojeVcoluMrCYTsCQXZeQ/viewform?usp=pp_url&entry.261504488={encoded_name}&entry.628940579={encoded_request}"
+                
+                st.link_button("✨ Click here to Finalize & Send", final_url)
+                st.info("Your prayer is ready! Just click the button above and hit 'Submit' on the next page.")
+            else:
+                st.warning("Please enter a prayer request first.")
 
 elif choice == "Gallery":
     st.header("📸 CDMC Activity Gallery")
