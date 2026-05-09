@@ -160,7 +160,7 @@ elif choice == "Prayer Requests":
                 timestamp = datetime.now(manila_tz).strftime("%Y-%m-%d %H:%M")
                 
                 st.balloons()
-                st.success(f"Thank you {name if name else 'friend'}, your request has been noted! (This version is for viewing; I will help you link the 'Write' function next.)")
+                st.success(f"Thank you {name if name else 'friend'}, your request has been noted!")
             else:
                 st.warning("Please enter a prayer request.")
 
